@@ -1,0 +1,83 @@
+﻿@using Microsoft.AspNet.Identity
+@using QuanLyDiemSinhVien.Models;
+@{
+    ApplicationDbContext db = new ApplicationDbContext();
+    string username = User.Identity.GetUserName();
+    ApplicationUser user = db.Users.FirstOrDefault(x => x.UserName == username);
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewBag.Title - Phần mềm quản lý điểm sinh viên</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    @Styles.Render("~/Content/css")
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="sidebar-mini skin-black-light layout-boxed">
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="#" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b>W</b>aI</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>Hệ thống</b> quản lý</span>
+            </a>
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        @Html.Partial("_LoginPartial")
+                        <li>
+                            <a href="#"><i class="fa fa-gears"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            @if (user != null)
+            {
+                if (user.IsSystemAdmin == true)
+                {
+                    @Html.Partial("_SideBar")
+                }
+                else if (user.GiangVienID != null)
+                {
+                    @Html.Partial("_SideBarGiangVien")
+                }
+                else if (user.SinhVienID != null)
+                {
+                    @Html.Partial("_SideBarUser")
+                }
+            }
+            <!-- /.sidebar -->
+        </aside>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>Đang truy cập</b> 10
+                <b>Lượt truy cập</b> 14234
+            </div>
+            <strong>Hệ thống quản lý điểm sinh viên </strong>
+        </footer>
+    </div>
+    <!-- ./wrapper -->
+
+    @Scripts.Render("~/Scripts/js")
+</body>
+</html>
